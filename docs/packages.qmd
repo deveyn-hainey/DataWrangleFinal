@@ -1,0 +1,36 @@
+## Packages Required
+
+<div style="float:left; margin-right: 20px;">
+  <img src="2.png" width="350px">
+</div>
+
+**The following packages were used:**
+
+- **readr:** Provides fast and friendly functions to read rectangular data (like CSVs) into R.
+
+- **dplyr:** Offers a consistent set of functions for data manipulation, such as filtering, selecting, and summarizing.
+
+- **ggplot2:** Implements the Grammar of Graphics to create static, layered, and customizable data visualizations.
+
+- **plotly:** Enables interactive, web-based visualizations using R, often built on top of ggplot2 plots.
+
+- **ggthemes:** Adds additional themes, scales, and styles to enhance the aesthetics of ggplot2 plots.
+
+- **tidyverse:** A collection of R packages designed for data science.
+
+- **DT:** Creates interactive tables in R Markdown using the DataTables JavaScript library.
+
+- **Maps:** Loads the maps.
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(DT)
+library(plotly)
+library(ggthemes)
+library(tidyverse)
+library(maps)
+```
+
+

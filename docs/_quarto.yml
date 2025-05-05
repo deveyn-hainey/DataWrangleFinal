@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+website:
+  title: "Nation Park Species Report"
+  navbar:
+    left:
+      - href: intro.qmd
+        text: Introduction
+      - href: packages.qmd
+        text: Packages
+      - href: Dataprep.qmd
+        text: Data Prep
+      - href: analysis.qmd
+        text: Data Analysis
+      - href: summary.qmd
+        text: Summary
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true

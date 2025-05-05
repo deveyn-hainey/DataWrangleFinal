@@ -1,0 +1,104 @@
+
+
+## Data Preparation
+<div style="float:right; margin-left: 20px;">
+  <img src="3.png" width="160px">
+</div>
+
+
+For this project, the team used the National Park Species dataset curated by the TidyTuesday initiative and originally sourced from the National Park Service’s NPSpecies database. NPSpecies aims to document species presence and status in National Parks by collecting credible evidence, observational records, and references. This particular dataset focuses on the most-visited parks in the United States. It contains attributes such as each park’s code and name, species’ scientific names and common names, plus information on nativeness, occurrence status, threatened/endangered status, and more.
+
+:::: {.panel-tabset}
+
+### 1. Importing and Glimpse
+
+```{r}
+library(dplyr)
+most_visited_nps_species_data <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-10-08/most_visited_nps_species_data.csv')
+
+# Preview structure and contents
+print(str(most_visited_nps_species_data))
+
+DT::datatable(head(most_visited_nps_species_data, 100), options = list(scrollX = TRUE))
+```
+
+### 2. Select Relevant Columns
+
+```{r}
+species <- most_visited_nps_species_data |>
+  select(ParkName, SciName, CommonNames, CategoryName, Nativeness, ParkAccepted, Occurrence, TEStatus, ParkCode)
+```
+
+### 3. Filter by Most Visited Parks
+
+```{r}
+top_visited <- c("GRSM", "GRCA", "ZION", "YELL", "ROMO", 
+                 "YOSE", "ACAD", "GRTE", "JOTR", "OLYM", 
+                 "GLAC", "CUVA", "INDU", "HOSP", "BRCA")
+
+most_visited_nps_species_data <- species |>
+  filter(ParkCode %in% top_visited)
+```
+
+### 4. Add Park Area and Location
+
+```{r}
+# Define park area
+park_area_df <- tibble(
+  ParkCode = c("ACAD", "GRCA", "ZION", "YELL", "ROMO", 
+               "YOSE", "GRSM", "GRTE", "JOTR", "OLYM", 
+               "GLAC", "CUVA", "INDU", "HOSP", "BRCA"),
+  ParkArea_km2 = c(198.6, 4926.1, 595.9, 8983.2, 265.8, 
+                   3026.9, 2114.2, 1254.7, 3196.1, 3733.8, 
+                   4101.8, 132.2, 61.2, 22.5, 145.3)
+)
+
+# Define coordinates
+park_locations <- tibble(
+  ParkCode = c("ACAD", "GRCA", "ZION", "YELL", "ROMO", 
+               "YOSE", "GRSM", "GRTE", "JOTR", "OLYM", 
+               "GLAC", "CUVA", "INDU", "HOSP", "BRCA"),
+  Longitude = c(-68.21, -112.14, -113.03, -110.59, -105.68, 
+                -119.53, -83.51, -110.72, -116.17, -123.69, 
+                -113.81, -81.57, -87.05, -93.06, -112.18),
+  Latitude = c(44.35, 36.06, 37.3, 44.6, 40.4, 
+               37.74, 35.68, 43.73, 33.79, 47.8, 
+               48.7, 41.24, 41.65, 34.51, 37.6)
+)
+
+# Create species density dataframe
+density_df <- most_visited_nps_species_data |>
+  group_by(ParkCode, ParkName) |>
+  summarise(Species_Count = n_distinct(SciName), .groups = "drop") |>
+  left_join(park_area_df, by = "ParkCode") |>
+  left_join(select(park_locations, ParkCode, Longitude, Latitude), by = "ParkCode") |>
+  mutate(Species_Density = Species_Count / ParkArea_km2)
+
+DT::datatable(density_df, options = list(scrollX = TRUE))
+```
+
+### 5. Clean and Save Data
+
+```{r}
+# Create TECategory
+most_visited_nps_species_data <- most_visited_nps_species_data |>
+  mutate(TECategory = case_when(
+    TEStatus %in% c("E") ~ "Endangered",
+    TEStatus %in% c("T") ~ "Threatened",
+    TEStatus %in% c("SC") ~ "Species of Concern",
+    TRUE ~ "Not Listed"
+  ))
+
+DT::datatable(head(most_visited_nps_species_data, 100), options = list(scrollX = TRUE))
+
+# Save all data
+saveRDS(
+  list(
+    species_data = most_visited_nps_species_data,
+    density_data = density_df
+  ),
+  "nps_clean_data.rds"
+)
+```
+
+::::

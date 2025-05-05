@@ -1,0 +1,37 @@
+
+## Summary: Exploring Biodiversity in America's Most Visited National Parks
+
+Welcome to the final overview of our project exploring species diversity across the most visited U.S. National Parks! 🌲🐻🐍 This journey through biodiversity, ecological patterns, and conservation priorities has been a deep dive into the nature of our parks with thousands of species, each playing a role in their ecosystems.
+
+### What We Explored
+We used the **National Park Species dataset** which was filtered down to focus on the most visited National Parks, key species characteristics, conservation status, park-level metrics and more.
+
+
+### Our Questions
+We set out to answer some exciting and ecologically relevant questions. - How many species are listed as Threatened or Endangered in each park? - Which parks are home to the highest species richness? 
+- How common are non-native species, and in which categories do they occur?
+- Are larger parks always richer in species?
+
+
+### Analysis Overview
+Our work was organized into four main areas:
+
+#### 1 **Threatened & Endangered Species Patterns**
+We explored the distribution of endangered, threatened, and species of concern. Some highlights:  Great Smoky Mountain National Park and the Grand Canyon host the highest number of TE species. Most TE species are native, but a few non-natives are also at risk. Birds dominate the TE list which is not surprising, they’re often easier to find and study.
+
+#### 2 **Nativeness and Ecological Integrity**
+We analyzed the percentage of non-native species by park. Parks like Acadia and Indiana Dunes had the highest proportion of non-natives. Vascular plants made up most of the non-native category. Many non-native species were still listed as present, showing they are actively part of these ecosystems.
+
+#### 3 **Species Richness & Composition**
+Who has the most species? The Great Smoky Mountains National Park dominated biodiversity. Fungi, fish, and spiders were heavily seen in Smoky Mountains National Park. For all parks bird richness dominated over mammal richness.
+
+#### 4 **Park Area & Species Density**
+This was a fun one! We made maps: Larger parks like Yellowstone and Grand Canyon National Parks have lower density and species richness compared to parks like Great Smoky Mountain National Park which is smaller in size but has higher species richness. Parks like Indiana Dunes and Hot Springs had small areas but higher species density per km². 
+
+### Final Thoughts
+National Parks are more than just pretty hiking trails, they are living ecosystems blossoming with diversity. This analysis helps show conservation priorities, the impact of non-native species, and which parks need more protection and awareness
+
+If you’ve ever wondered which park to visit to spot a variety of species this project gives you the data to decide.
+
+Thanks for joining us on this ecological adventure!
+

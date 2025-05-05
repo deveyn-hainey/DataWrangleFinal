@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.29">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>dataprep – Nation Park Species Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-0815c480559380816a4d1ea211a47e91.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5a8e8b9f5724df115f1a51278af9f234.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Nation Park Species Report</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./intro.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./packages.html"> 
+<span class="menu-text">Packages</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Dataprep.html" aria-current="page"> 
+<span class="menu-text">Data Prep</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./analysis.html"> 
+<span class="menu-text">Data Analysis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./summary.html"> 
+<span class="menu-text">Summary</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link active" data-scroll-target="#data-preparation">Data Preparation</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
+<div style="float:right; margin-left: 20px;">
+<p><img src="3.png" width="160px"></p>
+</div>
+<p>For this project, the team used the National Park Species dataset curated by the TidyTuesday initiative and originally sourced from the National Park Service’s NPSpecies database. NPSpecies aims to document species presence and status in National Parks by collecting credible evidence, observational records, and references. This particular dataset focuses on the most-visited parks in the United States. It contains attributes such as each park’s code and name, species’ scientific names and common names, plus information on nativeness, occurrence status, threatened/endangered status, and more.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">1. Importing and Glimpse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">2. Select Relevant Columns</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">3. Filter by Most Visited Parks</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">4. Add Park Area and Location</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">5. Clean and Save Data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>most_visited_nps_species_data <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-10-08/most_visited_nps_species_data.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 61119 Columns: 28</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (21): ParkCode, ParkName, CategoryName, Order, Family, TaxonRecordStatus...
+dbl  (3): References, Observations, Vouchers
+lgl  (4): Synonyms, ParkAccepted, Sensitive, ExternalLinks
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview structure and contents</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">str</span>(most_visited_nps_species_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [61,119 × 28] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ ParkCode            : chr [1:61119] "ACAD" "ACAD" "ACAD" "ACAD" ...
+ $ ParkName            : chr [1:61119] "Acadia National Park" "Acadia National Park" "Acadia National Park" "Acadia National Park" ...
+ $ CategoryName        : chr [1:61119] "Mammal" "Mammal" "Mammal" "Mammal" ...
+ $ Order               : chr [1:61119] "Artiodactyla" "Artiodactyla" "Carnivora" "Carnivora" ...
+ $ Family              : chr [1:61119] "Cervidae" "Cervidae" "Canidae" "Canidae" ...
+ $ TaxonRecordStatus   : chr [1:61119] "Active" "Active" "Active" "Active" ...
+ $ SciName             : chr [1:61119] "Alces alces" "Odocoileus virginianus" "Canis latrans" "Canis lupus" ...
+ $ CommonNames         : chr [1:61119] "Moose" "Northern White-tailed Deer, Virginia Deer, White-tailed Deer" "Coyote, Eastern Coyote" "Eastern Timber Wolf, Gray Wolf, Timber Wolf" ...
+ $ Synonyms            : logi [1:61119] NA NA NA NA NA NA ...
+ $ ParkAccepted        : logi [1:61119] TRUE TRUE TRUE TRUE TRUE TRUE ...
+ $ Sensitive           : logi [1:61119] FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ RecordStatus        : chr [1:61119] "Approved" "Approved" "Approved" "Approved" ...
+ $ Occurrence          : chr [1:61119] "Present" "Present" "Present" "Unconfirmed" ...
+ $ OccurrenceTags      : chr [1:61119] NA NA NA NA ...
+ $ Nativeness          : chr [1:61119] "Native" "Native" "Non-native" "Native" ...
+ $ NativenessTags      : chr [1:61119] NA NA NA NA ...
+ $ Abundance           : chr [1:61119] "Rare" "Abundant" "Common" NA ...
+ $ NPSTags             : chr [1:61119] "Resident" NA NA NA ...
+ $ ParkTags            : chr [1:61119] NA NA NA NA ...
+ $ References          : num [1:61119] 11 20 8 2 16 1 7 10 10 5 ...
+ $ Observations        : num [1:61119] 1 0 1 0 0 0 0 0 0 0 ...
+ $ Vouchers            : num [1:61119] 0 0 0 0 0 0 0 0 0 0 ...
+ $ ExternalLinks       : logi [1:61119] NA NA NA NA NA NA ...
+ $ TEStatus            : chr [1:61119] "50" "50" "SC" "E" ...
+ $ StateStatus         : chr [1:61119] NA NA NA NA ...
+ $ OzoneSensitiveStatus: chr [1:61119] NA NA NA NA ...
+ $ GRank               : chr [1:61119] "G5" "G5" "G5" "G5" ...
+ $ SRank               : chr [1:61119] "ME: S5" "ME: S5" "ME: S5" "ME: SH" ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   ParkCode = col_character(),
+  ..   ParkName = col_character(),
+  ..   CategoryName = col_character(),
+  ..   Order = col_character(),
+  ..   Family = col_character(),
+  ..   TaxonRecordStatus = col_character(),
+  ..   SciName = col_character(),
+  ..   CommonNames = col_character(),
+  ..   Synonyms = col_logical(),
+  ..   ParkAccepted = col_logical(),
+  ..   Sensitive = col_logical(),
+  ..   RecordStatus = col_character(),
+  ..   Occurrence = col_character(),
+  ..   OccurrenceTags = col_character(),
+  ..   Nativeness = col_character(),
+  ..   NativenessTags = col_character(),
+  ..   Abundance = col_character(),
+  ..   NPSTags = col_character(),
+  ..   ParkTags = col_character(),
+  ..   References = col_double(),
+  ..   Observations = col_double(),
+  ..   Vouchers = col_double(),
+  ..   ExternalLinks = col_logical(),
+  ..   TEStatus = col_character(),
+  ..   StateStatus = col_character(),
+  ..   OzoneSensitiveStatus = col_character(),
+  ..   GRank = col_character(),
+  ..   SRank = col_character()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; 
+NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="fu">head</span>(most_visited_nps_species_data, <span class="dv">100</span>), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">scrollX =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-70f1b0c9e575a0b77275" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-70f1b0c9e575a0b77275">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100"],["ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD"],["Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park"],["Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird"],["Artiodactyla","Artiodactyla","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Carnivora","Chiroptera","Chiroptera","Chiroptera","Chiroptera","Chiroptera","Chiroptera","Chiroptera","Chiroptera","Lagomorpha","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Rodentia","Soricomorpha","Soricomorpha","Soricomorpha","Soricomorpha","Soricomorpha","Soricomorpha","Soricomorpha","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Accipitriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes","Anseriformes"],["Cervidae","Cervidae","Canidae","Canidae","Canidae","Felidae","Felidae","Mephitidae","Mustelidae","Mustelidae","Mustelidae","Mustelidae","Mustelidae","Mustelidae","Mustelidae","Odobenidae","Phocidae","Phocidae","Procyonidae","Ursidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Vespertilionidae","Leporidae","Castoridae","Cricetidae","Cricetidae","Cricetidae","Cricetidae","Cricetidae","Cricetidae","Dipodidae","Dipodidae","Erethizontidae","Muridae","Muridae","Sciuridae","Sciuridae","Sciuridae","Sciuridae","Sciuridae","Sciuridae","Sciuridae","Soricidae","Soricidae","Soricidae","Soricidae","Soricidae","Talpidae","Talpidae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Accipitridae","Cathartidae","Pandionidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae","Anatidae"],["Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Inactive","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active","Active"],["Alces alces","Odocoileus virginianus","Canis latrans","Canis lupus","Vulpes vulpes","Lynx canadensis","Lynx rufus","Mephitis mephitis","Lutra canadensis","Martes pennanti","Mustela","Mustela erminea","Mustela frenata","Mustela macrodon","Mustela vison","Odobenus rosmarus","Halichoerus grypus","Phoca vitulina","Procyon lotor","Ursus americanus","Eptesicus fuscus","Lasionycteris noctivagans","Lasiurus borealis","Lasiurus cinereus","Myotis keenii","Myotis leibii","Myotis lucifugus","Pipistrellus subflavus","Lepus americanus","Castor canadensis","Clethrionomys gapperi","Microtus pennsylvanicus","Ondatra zibethicus","Peromyscus leucopus","Peromyscus maniculatus","Synaptomys cooperi","Napaeozapus insignis","Zapus hudsonius","Erethizon dorsatum","Mus musculus","Rattus norvegicus","Glaucomys","Glaucomys sabrinus","Glaucomys volans","Marmota monax","Sciurus carolinensis","Tamias striatus","Tamiasciurus hudsonicus","Blarina brevicauda","Sorex cinereus","Sorex fumeus","Sorex hoyi","Sorex palustris","Condylura cristata","Parascalops breweri","Accipiter cooperii","Accipiter gentilis","Accipiter striatus","Aquila chrysaetos","Buteo jamaicensis","Buteo lagopus","Buteo lineatus","Buteo platypterus","Buteo swainsoni","Circus cyaneus","Haliaeetus leucocephalus","Cathartes aura","Pandion haliaetus","Aix sponsa","Anas acuta","Anas americana","Anas clypeata","Anas crecca","Anas discors","Anas penelope","Anas platyrhynchos","Anas rubripes","Anas strepera","Anser albifrons","Aythya affinis","Aythya americana","Aythya collaris","Aythya marila","Aythya valisineria","Branta bernicla","Branta canadensis","Bucephala albeola","Bucephala clangula","Bucephala islandica","Camptorhynchus labradorius","Chen caerulescens","Clangula hyemalis","Cygnus columbianus","Histrionicus histrionicus","Lophodytes cucullatus","Melanitta fusca","Melanitta nigra","Melanitta perspicillata","Mergus merganser","Mergus serrator"],["Moose","Northern White-tailed Deer, Virginia Deer, White-tailed Deer","Coyote, Eastern Coyote","Eastern Timber Wolf, Gray Wolf, Timber Wolf","Black Fox, Cross Fox, Eastern Red Fox, Fox, Red Fox, Silver Fox","Canada Lynx","Bay Lynx, Bobcat, Red Lynx, Wild Cat","Eastern Skunk, Polecat, Striped Skunk","Otter, River Otter","Blackcat, Fisher, Pekan","Weasel","Bonaparte Weasel, Bonaparte's Weasel, Ermine, Short-tailed Weasel","Long-tailed Weasel, New York Weasel, Northern Long-tailed Weasel","Ancient Sea Mink, Big Sea Mink, Sea Mink","American Mink, Mink","Walrus","Gray Seal","Common Seal, Hair Seal, Harbor Seal","Common Raccoon, Raccoon","Black Bear","Big Brown Bat, Common Brown Bat","Silver-haired Bat","Eastern Red Bat, New York Bat, Northern Red Bat, Red Bat","Hoary Bat","Keen's Myotis, Northern Long-eared Bat, Northern Myotis, Say's Bat","Eastern Small-footed Myotis, Small-footed Myotis","Little Brown Bat, Little Brown Myotis","Eastern Pipistrelle, Northern Georgian Bat","Snowshoe Hare, Varying Hare","American Beaver, Beaver, Canadian Beaver","Boreal Redback Vole, Red-backed Mouse, Red-backed Vole, Southern Red-backed Vole, White-Mountain Red-backed Mouse","Field Mouse, Meadow Mouse, Meadow Vole","Common Muskrat, Muskrat, Musquash, Water Rat","White-footed Mouse","Deer Mouse","Cooper Lemming Mouse, Southern Bog Lemming","Woodland Jumping Mouse","Hudson Bay Jumping Mouse, Kangaroo Mouse, Meadow Jumping Mouse","Hedgehog, Porcupine","House Mouse","Brown Rat, Norway Rat","Glaucomys sp.","Mearns Flying Squirrel, Northern Flying Squirrel","Southern Flying Squirrel","Groundhog, New England Woodchuck, Woodchuck","Eastern Gray Squirrel, Gray Squirrel, Northern Gray Squirrel","Northeastern Chipmunk, Striped Squirrel, Eastern Chipmunk, Ground Squirrel, Lyster Chipmunk","Chickaree, Red Squirrel","Mole Shrew, Northern Short-tailed Shrew, Short-tailed Shrew","Masked Shrew","Northern Smoky Shrew, Smoky Shrew","Hoy's Pygmy Shrew, Pygmy Shrew, Thompson's Pygmy Shrew","Northern Water Shrew, Water Shrew, White-lipped Water Shrew","Star-nosed Mole","Brewer's Mole, Hairy-tailed Mole","Cooper's Hawk","Eastern Goshawk, Goshawk, Northern Goshawk","Northern Sharp-shinned Hawk, Sharp-shinned Hawk","American Golden Eagle, Golden Eagle","Eastern Red-tailed Hawk, Red-tailed Hawk","American Rough-legged Hawk, Rough-legged Hawk","Northern Red-shouldered Hawk, Red-shouldered Hawk","Broad-winged Hawk, Northern Broad-winged Hawk","Swainson's Hawk","American Marsh Hawk, Marsh Hawk, Northern Harrier","Bald Eagle, Northern Bald Eagle","Eastern Turkey Vulture, Turkey Vulture","American Osprey, Fish Hawk, Osprey","Wood Duck","American Pintail, Northern Pintail, Pintail","American Wigeon, Baldpate","Northern shoveler, Shoveller","Green-winged Teal","Blue-winged Teal","Eurasian Wigeon, European Widgeon, Widgeon","Common Mallard, Mallard","American Black Duck, Black Duck, Common Black Duck, Red-legged Black Duck","Gadwall","Common White-fronted Goose, Greater White-fronted Goose","Lesser Scaup, Lesser Scaup Duck","Redhead","Ring-necked Duck","Greater Scaup, Greater Scaup Duck","Canvasback","American Brant, Brant","Canada Goose, Eastern Canada Goose","Bufflehead, Buffle-head","American Golden-eye, Common Goldeneye","Barrow's Goldeneye","Labrador Duck","Blue Goose, Snow Goose","Long-tailed Duck, Old Squaw, Oldsquaw","Tundra Swan, Whistling Swan","Eastern Harlequin Duck, Harlequin Duck","Hooded Merganser","Eastern White-winged Scoter, White-winged Coot, White-winged Scoter","American Common Scoter, American Scoter, Black Scoter, Butter-bill, Common Scoter","Surf Scoter","American Merganser, Common Merganser","Red-breasted Merganser"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],["Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","In Review","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","In Review","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved","Approved"],["Present","Present","Present","Unconfirmed","Present","Unconfirmed","Present","Not In Park","Present","Present","Unconfirmed","Present","Present","Unconfirmed","Present","Unconfirmed","Unconfirmed","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Not In Park","Present","Not In Park","Present","Present","Present","Not In Park","Not In Park","Present","Present","Present","Present","Present","Present","Not In Park","Unconfirmed","Unconfirmed","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Unconfirmed","Present","Present","Present","Probably Present","Present","Present","Present","Unconfirmed","Unconfirmed","Present","Unconfirmed","Unconfirmed","Present","Present","Unconfirmed","Unconfirmed","Unconfirmed","Present","Present"],[null,null,null,null,null,null,null,"Historical",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"Historical",null,"False Report",null,null,null,"Historical","Historical",null,null,null,null,null,null,"Historical",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["Native","Native","Non-native","Native","Unknown","Native","Non-native","Native","Native","Native","Unknown","Native","Native","Native","Native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Non-native","Non-native","Non-native","Native","Non-native","Non-native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Unknown","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Unknown","Native","Non-native","Unknown","Unknown","Non-native","Native","Native","Non-native","Native","Unknown","Native","Native","Unknown","Native","Native","Native","Unknown","Native","Native","Native","Native","Native","Native","Native"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["Rare","Abundant","Common",null,"Common",null,null,null,"Common","Rare",null,"Uncommon","Uncommon",null,"Uncommon",null,null,null,"Common","Occasional","Uncommon","Unknown","Occasional","Unknown","Common",null,"Common",null,"Common","Common","Common",null,null,"Common","Abundant","Rare","Rare","Uncommon","Common",null,null,null,"Common",null,"Common","Common","Abundant","Common","Uncommon","Abundant","Uncommon","Common","Uncommon","Common",null,"Uncommon","Uncommon","Common","Occasional","Common","Uncommon","Occasional","Common",null,"Uncommon","Common","Common","Common","Common","Rare","Uncommon",null,"Common","Uncommon","Unknown","Common","Abundant","Unknown","Occasional",null,null,"Common","Common","Occasional",null,"Common","Abundant","Common",null,null,"Occasional",null,null,"Common","Uncommon",null,null,null,"Uncommon","Common"],["Resident",null,null,null,"Breeder",null,"Vagrant",null,"Breeder",null,null,null,null,null,null,null,null,null,null,null,null,null,"Migratory",null,null,null,null,null,"Breeder","Breeder","Breeder","Breeder",null,"Breeder","Breeder","Breeder","Breeder","Breeder","Breeder",null,null,null,"Breeder",null,"Breeder",null,"Breeder","Breeder","Breeder","Breeder","Breeder",null,"Breeder","Breeder",null,null,"Breeder","Breeder","Vagrant","Breeder","Resident","Migratory","Breeder",null,"Breeder","Breeder",null,null,"Breeder","Migratory","Migratory","Migratory","Breeder","Breeder","Vagrant","Breeder","Breeder","Vagrant","Vagrant","Migratory","Vagrant","Breeder","Resident","Vagrant","Migratory",null,"Resident","Resident",null,null,"Vagrant","Resident","Vagrant","Resident","Breeder","Resident","Resident","Resident","Breeder","Breeder"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[11,20,8,2,16,1,7,10,10,5,2,7,6,1,14,1,2,6,15,6,9,3,8,6,6,6,9,1,18,12,20,16,12,10,21,6,11,11,8,6,3,1,13,2,6,10,16,18,18,17,2,6,5,9,5,17,22,30,7,22,13,17,26,1,27,35,7,32,13,10,4,3,18,13,3,18,26,1,1,4,1,9,10,3,12,16,11,13,6,1,5,15,5,16,10,15,16,11,13,20],[1,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,3,2,0,1,5,1,2,1,0,0,0,0,2,0,0,0,0,3,1,2,1,2,2,1,1,1,2,3,2,1,3,1,1,0,2,2,1,2,1,1,2,0,1,1,1,0,1,1,1,0,0,1,1,0,0,2,1,1,0,0,1,0,0,0,1,0,0,0,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["50","50","SC","E",null,null,"RT",null,null,null,null,null,null,null,null,"50",null,null,null,null,"SC","SC",null,"SU","SC",null,"UR","SU",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"SC","RT","SC","SC","50","SC","SC",null,"SC","SC","DM","SC","SC","SU",null,null,null,"SU",null,null,"SU",null,null,null,"SC",null,null,null,null,null,"SU",null,null,null,null,null,"RT",null,"RT",null,"SC","SC","SC",null,"SC"],[null,null,null,null,null,"ME: SC",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ME: SC","ME: SC","ME: SC",null,"ME: T","ME: E","ME: SC",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ME: E",null,null,null,null,null,"ME: SC","ME: SC",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ME: SC",null,null,null,null,null,"ME: T",null,null,null,null,"ME: T",null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["G5","G5","G5","G5","G5","G5","G5","G5",null,null,null,"GNR",null,null,null,"G4","G5","G5","G5","G5","G5","G3G4","G3G4","G3G4","G3","G4","G3G4",null,"G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5",null,"G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5",null,"G5","G5","G5","G5","G5","G5","G5",null,"G5","G5","G5","G5","G5",null,null,"G5",null,null,"G5","G5",null,"G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","G5","GX",null,"G5","G5","G4","G5",null,null,"G5","G5","G5"],["ME: S5","ME: S5","ME: S5","ME: SH","ME: S5","ME: S2","ME: S5","ME: S5",null,null,null,null,null,null,null,null,"ME: S1","ME: S5","ME: S5","ME: S5","ME: S4","ME: SU","ME: SU","ME: SU",null,"ME: S1S2","ME: S5",null,"ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S4","ME: S5","ME: S5","ME: S5","ME: SNA","ME: SNA",null,"ME: S5","ME: SU","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5","ME: S5",null,"ME: S5","ME: S5","ME: S3S4B,S3?N",null,"ME: S3S4B,S2S3N","ME: S1B,S1N","ME: S3N,S5B","ME: S2S3N","ME: S3N,S4B","ME: S5B",null,null,"ME: S4B,S4N","ME: S4B","ME: S5B","ME: S5B","ME: S1B,S3S4N",null,null,"ME: S5B",null,null,"ME: S5B,S5N","ME: S5B,S5N",null,null,"ME: S1S3N","ME: SNA","ME: S5B","ME: S3S4N","ME: SNA","ME: S3S4N","ME: S4N,S5B","ME: S5N","ME: S5B,S5N","ME: S2S3N","ME: SX",null,"ME: S5N",null,"ME: S2S3N","ME: S5",null,null,"ME: S3S4N","ME: S5","ME: S3B,S5N"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ParkCode<\/th>\n      <th>ParkName<\/th>\n      <th>CategoryName<\/th>\n      <th>Order<\/th>\n      <th>Family<\/th>\n      <th>TaxonRecordStatus<\/th>\n      <th>SciName<\/th>\n      <th>CommonNames<\/th>\n      <th>Synonyms<\/th>\n      <th>ParkAccepted<\/th>\n      <th>Sensitive<\/th>\n      <th>RecordStatus<\/th>\n      <th>Occurrence<\/th>\n      <th>OccurrenceTags<\/th>\n      <th>Nativeness<\/th>\n      <th>NativenessTags<\/th>\n      <th>Abundance<\/th>\n      <th>NPSTags<\/th>\n      <th>ParkTags<\/th>\n      <th>References<\/th>\n      <th>Observations<\/th>\n      <th>Vouchers<\/th>\n      <th>ExternalLinks<\/th>\n      <th>TEStatus<\/th>\n      <th>StateStatus<\/th>\n      <th>OzoneSensitiveStatus<\/th>\n      <th>GRank<\/th>\n      <th>SRank<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[20,21,22]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ParkCode","targets":1},{"name":"ParkName","targets":2},{"name":"CategoryName","targets":3},{"name":"Order","targets":4},{"name":"Family","targets":5},{"name":"TaxonRecordStatus","targets":6},{"name":"SciName","targets":7},{"name":"CommonNames","targets":8},{"name":"Synonyms","targets":9},{"name":"ParkAccepted","targets":10},{"name":"Sensitive","targets":11},{"name":"RecordStatus","targets":12},{"name":"Occurrence","targets":13},{"name":"OccurrenceTags","targets":14},{"name":"Nativeness","targets":15},{"name":"NativenessTags","targets":16},{"name":"Abundance","targets":17},{"name":"NPSTags","targets":18},{"name":"ParkTags","targets":19},{"name":"References","targets":20},{"name":"Observations","targets":21},{"name":"Vouchers","targets":22},{"name":"ExternalLinks","targets":23},{"name":"TEStatus","targets":24},{"name":"StateStatus","targets":25},{"name":"OzoneSensitiveStatus","targets":26},{"name":"GRank","targets":27},{"name":"SRank","targets":28}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> most_visited_nps_species_data <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ParkName, SciName, CommonNames, CategoryName, Nativeness, ParkAccepted, Occurrence, TEStatus, ParkCode)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>top_visited <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"GRSM"</span>, <span class="st">"GRCA"</span>, <span class="st">"ZION"</span>, <span class="st">"YELL"</span>, <span class="st">"ROMO"</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"YOSE"</span>, <span class="st">"ACAD"</span>, <span class="st">"GRTE"</span>, <span class="st">"JOTR"</span>, <span class="st">"OLYM"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"GLAC"</span>, <span class="st">"CUVA"</span>, <span class="st">"INDU"</span>, <span class="st">"HOSP"</span>, <span class="st">"BRCA"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>most_visited_nps_species_data <span class="ot">&lt;-</span> species <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ParkCode <span class="sc">%in%</span> top_visited)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define park area</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>park_area_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ParkCode =</span> <span class="fu">c</span>(<span class="st">"ACAD"</span>, <span class="st">"GRCA"</span>, <span class="st">"ZION"</span>, <span class="st">"YELL"</span>, <span class="st">"ROMO"</span>, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">"YOSE"</span>, <span class="st">"GRSM"</span>, <span class="st">"GRTE"</span>, <span class="st">"JOTR"</span>, <span class="st">"OLYM"</span>, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">"GLAC"</span>, <span class="st">"CUVA"</span>, <span class="st">"INDU"</span>, <span class="st">"HOSP"</span>, <span class="st">"BRCA"</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ParkArea_km2 =</span> <span class="fu">c</span>(<span class="fl">198.6</span>, <span class="fl">4926.1</span>, <span class="fl">595.9</span>, <span class="fl">8983.2</span>, <span class="fl">265.8</span>, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">3026.9</span>, <span class="fl">2114.2</span>, <span class="fl">1254.7</span>, <span class="fl">3196.1</span>, <span class="fl">3733.8</span>, </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">4101.8</span>, <span class="fl">132.2</span>, <span class="fl">61.2</span>, <span class="fl">22.5</span>, <span class="fl">145.3</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define coordinates</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>park_locations <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ParkCode =</span> <span class="fu">c</span>(<span class="st">"ACAD"</span>, <span class="st">"GRCA"</span>, <span class="st">"ZION"</span>, <span class="st">"YELL"</span>, <span class="st">"ROMO"</span>, </span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"YOSE"</span>, <span class="st">"GRSM"</span>, <span class="st">"GRTE"</span>, <span class="st">"JOTR"</span>, <span class="st">"OLYM"</span>, </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>               <span class="st">"GLAC"</span>, <span class="st">"CUVA"</span>, <span class="st">"INDU"</span>, <span class="st">"HOSP"</span>, <span class="st">"BRCA"</span>),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Longitude =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">68.21</span>, <span class="sc">-</span><span class="fl">112.14</span>, <span class="sc">-</span><span class="fl">113.03</span>, <span class="sc">-</span><span class="fl">110.59</span>, <span class="sc">-</span><span class="fl">105.68</span>, </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="fl">119.53</span>, <span class="sc">-</span><span class="fl">83.51</span>, <span class="sc">-</span><span class="fl">110.72</span>, <span class="sc">-</span><span class="fl">116.17</span>, <span class="sc">-</span><span class="fl">123.69</span>, </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="fl">113.81</span>, <span class="sc">-</span><span class="fl">81.57</span>, <span class="sc">-</span><span class="fl">87.05</span>, <span class="sc">-</span><span class="fl">93.06</span>, <span class="sc">-</span><span class="fl">112.18</span>),</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Latitude =</span> <span class="fu">c</span>(<span class="fl">44.35</span>, <span class="fl">36.06</span>, <span class="fl">37.3</span>, <span class="fl">44.6</span>, <span class="fl">40.4</span>, </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>               <span class="fl">37.74</span>, <span class="fl">35.68</span>, <span class="fl">43.73</span>, <span class="fl">33.79</span>, <span class="fl">47.8</span>, </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>               <span class="fl">48.7</span>, <span class="fl">41.24</span>, <span class="fl">41.65</span>, <span class="fl">34.51</span>, <span class="fl">37.6</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Create species density dataframe</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>density_df <span class="ot">&lt;-</span> most_visited_nps_species_data <span class="sc">|&gt;</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ParkCode, ParkName) <span class="sc">|&gt;</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Species_Count =</span> <span class="fu">n_distinct</span>(SciName), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(park_area_df, <span class="at">by =</span> <span class="st">"ParkCode"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(park_locations, ParkCode, Longitude, Latitude), <span class="at">by =</span> <span class="st">"ParkCode"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species_Density =</span> Species_Count <span class="sc">/</span> ParkArea_km2)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(density_df, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">scrollX =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b3ad8bc476b42eed89d8" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b3ad8bc476b42eed89d8">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["ACAD","BRCA","CUVA","GLAC","GRCA","GRSM","GRTE","HOSP","INDU","JOTR","OLYM","ROMO","YELL","YOSE","ZION"],["Acadia National Park","Bryce Canyon National Park","Cuyahoga Valley National Park","Glacier National Park","Grand Canyon National Park","Great Smoky Mountains National Park","Grand Teton National Park","Hot Springs National Park","Indiana Dunes National Park","Joshua Tree National Park","Olympic National Park","Rocky Mountain National Park","Yellowstone National Park","Yosemite National Park","Zion National Park"],[1709,1287,1939,2559,2707,28655,2245,1972,2483,2316,1947,3201,4175,2086,1799],[198.6,145.3,132.2,4101.8,4926.1,2114.2,1254.7,22.5,61.2,3196.1,3733.8,265.8,8983.200000000001,3026.9,595.9],[-68.20999999999999,-112.18,-81.56999999999999,-113.81,-112.14,-83.51000000000001,-110.72,-93.06,-87.05,-116.17,-123.69,-105.68,-110.59,-119.53,-113.03],[44.35,37.6,41.24,48.7,36.06,35.68,43.73,34.51,41.65,33.79,47.8,40.4,44.6,37.74,37.3],[8.605236656596173,8.857536132140398,14.66717095310136,0.6238724462431128,0.5495219341872881,13.55359001040583,1.789272336016578,87.64444444444445,40.5718954248366,0.7246331466474766,0.5214526755584123,12.04288939051919,0.4647564342327901,0.6891539198519938,3.018962913240477]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ParkCode<\/th>\n      <th>ParkName<\/th>\n      <th>Species_Count<\/th>\n      <th>ParkArea_km2<\/th>\n      <th>Longitude<\/th>\n      <th>Latitude<\/th>\n      <th>Species_Density<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ParkCode","targets":1},{"name":"ParkName","targets":2},{"name":"Species_Count","targets":3},{"name":"ParkArea_km2","targets":4},{"name":"Longitude","targets":5},{"name":"Latitude","targets":6},{"name":"Species_Density","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create TECategory</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>most_visited_nps_species_data <span class="ot">&lt;-</span> most_visited_nps_species_data <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TECategory =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    TEStatus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"E"</span>) <span class="sc">~</span> <span class="st">"Endangered"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    TEStatus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"T"</span>) <span class="sc">~</span> <span class="st">"Threatened"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    TEStatus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SC"</span>) <span class="sc">~</span> <span class="st">"Species of Concern"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Not Listed"</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="fu">head</span>(most_visited_nps_species_data, <span class="dv">100</span>), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">scrollX =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-dd8146b894016e704255" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-dd8146b894016e704255">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100"],["Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park","Acadia National Park"],["Alces alces","Odocoileus virginianus","Canis latrans","Canis lupus","Vulpes vulpes","Lynx canadensis","Lynx rufus","Mephitis mephitis","Lutra canadensis","Martes pennanti","Mustela","Mustela erminea","Mustela frenata","Mustela macrodon","Mustela vison","Odobenus rosmarus","Halichoerus grypus","Phoca vitulina","Procyon lotor","Ursus americanus","Eptesicus fuscus","Lasionycteris noctivagans","Lasiurus borealis","Lasiurus cinereus","Myotis keenii","Myotis leibii","Myotis lucifugus","Pipistrellus subflavus","Lepus americanus","Castor canadensis","Clethrionomys gapperi","Microtus pennsylvanicus","Ondatra zibethicus","Peromyscus leucopus","Peromyscus maniculatus","Synaptomys cooperi","Napaeozapus insignis","Zapus hudsonius","Erethizon dorsatum","Mus musculus","Rattus norvegicus","Glaucomys","Glaucomys sabrinus","Glaucomys volans","Marmota monax","Sciurus carolinensis","Tamias striatus","Tamiasciurus hudsonicus","Blarina brevicauda","Sorex cinereus","Sorex fumeus","Sorex hoyi","Sorex palustris","Condylura cristata","Parascalops breweri","Accipiter cooperii","Accipiter gentilis","Accipiter striatus","Aquila chrysaetos","Buteo jamaicensis","Buteo lagopus","Buteo lineatus","Buteo platypterus","Buteo swainsoni","Circus cyaneus","Haliaeetus leucocephalus","Cathartes aura","Pandion haliaetus","Aix sponsa","Anas acuta","Anas americana","Anas clypeata","Anas crecca","Anas discors","Anas penelope","Anas platyrhynchos","Anas rubripes","Anas strepera","Anser albifrons","Aythya affinis","Aythya americana","Aythya collaris","Aythya marila","Aythya valisineria","Branta bernicla","Branta canadensis","Bucephala albeola","Bucephala clangula","Bucephala islandica","Camptorhynchus labradorius","Chen caerulescens","Clangula hyemalis","Cygnus columbianus","Histrionicus histrionicus","Lophodytes cucullatus","Melanitta fusca","Melanitta nigra","Melanitta perspicillata","Mergus merganser","Mergus serrator"],["Moose","Northern White-tailed Deer, Virginia Deer, White-tailed Deer","Coyote, Eastern Coyote","Eastern Timber Wolf, Gray Wolf, Timber Wolf","Black Fox, Cross Fox, Eastern Red Fox, Fox, Red Fox, Silver Fox","Canada Lynx","Bay Lynx, Bobcat, Red Lynx, Wild Cat","Eastern Skunk, Polecat, Striped Skunk","Otter, River Otter","Blackcat, Fisher, Pekan","Weasel","Bonaparte Weasel, Bonaparte's Weasel, Ermine, Short-tailed Weasel","Long-tailed Weasel, New York Weasel, Northern Long-tailed Weasel","Ancient Sea Mink, Big Sea Mink, Sea Mink","American Mink, Mink","Walrus","Gray Seal","Common Seal, Hair Seal, Harbor Seal","Common Raccoon, Raccoon","Black Bear","Big Brown Bat, Common Brown Bat","Silver-haired Bat","Eastern Red Bat, New York Bat, Northern Red Bat, Red Bat","Hoary Bat","Keen's Myotis, Northern Long-eared Bat, Northern Myotis, Say's Bat","Eastern Small-footed Myotis, Small-footed Myotis","Little Brown Bat, Little Brown Myotis","Eastern Pipistrelle, Northern Georgian Bat","Snowshoe Hare, Varying Hare","American Beaver, Beaver, Canadian Beaver","Boreal Redback Vole, Red-backed Mouse, Red-backed Vole, Southern Red-backed Vole, White-Mountain Red-backed Mouse","Field Mouse, Meadow Mouse, Meadow Vole","Common Muskrat, Muskrat, Musquash, Water Rat","White-footed Mouse","Deer Mouse","Cooper Lemming Mouse, Southern Bog Lemming","Woodland Jumping Mouse","Hudson Bay Jumping Mouse, Kangaroo Mouse, Meadow Jumping Mouse","Hedgehog, Porcupine","House Mouse","Brown Rat, Norway Rat","Glaucomys sp.","Mearns Flying Squirrel, Northern Flying Squirrel","Southern Flying Squirrel","Groundhog, New England Woodchuck, Woodchuck","Eastern Gray Squirrel, Gray Squirrel, Northern Gray Squirrel","Northeastern Chipmunk, Striped Squirrel, Eastern Chipmunk, Ground Squirrel, Lyster Chipmunk","Chickaree, Red Squirrel","Mole Shrew, Northern Short-tailed Shrew, Short-tailed Shrew","Masked Shrew","Northern Smoky Shrew, Smoky Shrew","Hoy's Pygmy Shrew, Pygmy Shrew, Thompson's Pygmy Shrew","Northern Water Shrew, Water Shrew, White-lipped Water Shrew","Star-nosed Mole","Brewer's Mole, Hairy-tailed Mole","Cooper's Hawk","Eastern Goshawk, Goshawk, Northern Goshawk","Northern Sharp-shinned Hawk, Sharp-shinned Hawk","American Golden Eagle, Golden Eagle","Eastern Red-tailed Hawk, Red-tailed Hawk","American Rough-legged Hawk, Rough-legged Hawk","Northern Red-shouldered Hawk, Red-shouldered Hawk","Broad-winged Hawk, Northern Broad-winged Hawk","Swainson's Hawk","American Marsh Hawk, Marsh Hawk, Northern Harrier","Bald Eagle, Northern Bald Eagle","Eastern Turkey Vulture, Turkey Vulture","American Osprey, Fish Hawk, Osprey","Wood Duck","American Pintail, Northern Pintail, Pintail","American Wigeon, Baldpate","Northern shoveler, Shoveller","Green-winged Teal","Blue-winged Teal","Eurasian Wigeon, European Widgeon, Widgeon","Common Mallard, Mallard","American Black Duck, Black Duck, Common Black Duck, Red-legged Black Duck","Gadwall","Common White-fronted Goose, Greater White-fronted Goose","Lesser Scaup, Lesser Scaup Duck","Redhead","Ring-necked Duck","Greater Scaup, Greater Scaup Duck","Canvasback","American Brant, Brant","Canada Goose, Eastern Canada Goose","Bufflehead, Buffle-head","American Golden-eye, Common Goldeneye","Barrow's Goldeneye","Labrador Duck","Blue Goose, Snow Goose","Long-tailed Duck, Old Squaw, Oldsquaw","Tundra Swan, Whistling Swan","Eastern Harlequin Duck, Harlequin Duck","Hooded Merganser","Eastern White-winged Scoter, White-winged Coot, White-winged Scoter","American Common Scoter, American Scoter, Black Scoter, Butter-bill, Common Scoter","Surf Scoter","American Merganser, Common Merganser","Red-breasted Merganser"],["Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Mammal","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird","Bird"],["Native","Native","Non-native","Native","Unknown","Native","Non-native","Native","Native","Native","Unknown","Native","Native","Native","Native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Non-native","Non-native","Non-native","Native","Non-native","Non-native","Non-native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Unknown","Native","Native","Native","Native","Native","Native","Native","Native","Native","Native","Non-native","Unknown","Native","Non-native","Unknown","Unknown","Non-native","Native","Native","Non-native","Native","Unknown","Native","Native","Unknown","Native","Native","Native","Unknown","Native","Native","Native","Native","Native","Native","Native"],[true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["Present","Present","Present","Unconfirmed","Present","Unconfirmed","Present","Not In Park","Present","Present","Unconfirmed","Present","Present","Unconfirmed","Present","Unconfirmed","Unconfirmed","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Not In Park","Present","Not In Park","Present","Present","Present","Not In Park","Not In Park","Present","Present","Present","Present","Present","Present","Not In Park","Unconfirmed","Unconfirmed","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Present","Present","Present","Present","Present","Present","Present","Unconfirmed","Unconfirmed","Present","Present","Present","Probably Present","Present","Present","Present","Unconfirmed","Unconfirmed","Present","Unconfirmed","Unconfirmed","Present","Present","Unconfirmed","Unconfirmed","Unconfirmed","Present","Present"],["50","50","SC","E",null,null,"RT",null,null,null,null,null,null,null,null,"50",null,null,null,null,"SC","SC",null,"SU","SC",null,"UR","SU",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"SC","RT","SC","SC","50","SC","SC",null,"SC","SC","DM","SC","SC","SU",null,null,null,"SU",null,null,"SU",null,null,null,"SC",null,null,null,null,null,"SU",null,null,null,null,null,"RT",null,"RT",null,"SC","SC","SC",null,"SC"],["ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD","ACAD"],["Not Listed","Not Listed","Species of Concern","Endangered","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Species of Concern","Species of Concern","Not Listed","Not Listed","Species of Concern","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Species of Concern","Not Listed","Species of Concern","Species of Concern","Not Listed","Species of Concern","Species of Concern","Not Listed","Species of Concern","Species of Concern","Not Listed","Species of Concern","Species of Concern","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Species of Concern","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Species of Concern","Species of Concern","Species of Concern","Not Listed","Species of Concern"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ParkName<\/th>\n      <th>SciName<\/th>\n      <th>CommonNames<\/th>\n      <th>CategoryName<\/th>\n      <th>Nativeness<\/th>\n      <th>ParkAccepted<\/th>\n      <th>Occurrence<\/th>\n      <th>TEStatus<\/th>\n      <th>ParkCode<\/th>\n      <th>TECategory<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ParkName","targets":1},{"name":"SciName","targets":2},{"name":"CommonNames","targets":3},{"name":"CategoryName","targets":4},{"name":"Nativeness","targets":5},{"name":"ParkAccepted","targets":6},{"name":"Occurrence","targets":7},{"name":"TEStatus","targets":8},{"name":"ParkCode","targets":9},{"name":"TECategory","targets":10}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save all data</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">species_data =</span> most_visited_nps_species_data,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">density_data =</span> density_df</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nps_clean_data.rds"</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

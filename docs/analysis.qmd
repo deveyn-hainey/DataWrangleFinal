@@ -1,0 +1,186 @@
+
+# Data Analysis
+
+:::: {.panel-tabset .panel-tabset-pills}
+
+```{r setup, include=FALSE}
+library(tidyverse)
+nps_data <- readRDS("nps_clean_data.rds")
+
+most_visited_nps_species_data <- nps_data$species_data
+density_df <- nps_data$density_data
+```
+
+
+## Threatened & Endangered Species Patterns
+This section focuses on species that are at risk, such as those labeled as Endangered, Threatened, or Species of Concern. The examination of how many species exist in each national park, what proportion they represent out of the total species in that park, and how their nativeness varies was completed. These insights help identify parks with higher conservation burdens and explore which types of species are most vulnerable.
+
+```{r}
+library(tidyverse)
+
+te_data <- most_visited_nps_species_data |>
+  filter(TECategory != "Not Listed")
+
+# TE species count by park
+ggplot(te_data, aes(x = fct_infreq(ParkName), fill = TECategory)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Threatened/Endangered Species by Park", x = "Park", y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Percent TE species in each park
+te_percent <- most_visited_nps_species_data |>
+  group_by(ParkName) |>
+  summarise(
+    Total = n(),
+    TE = sum(TECategory %in% c("Endangered", "Threatened", "Species of Concern"))
+  ) |>
+  mutate(PercentTE = TE / Total * 100)
+
+ggplot(te_percent, aes(x = fct_reorder(ParkName, PercentTE), y = PercentTE)) +
+  geom_col(fill = "firebrick") +
+  labs(title = "Percentage of TE Species by Park", x = "Park", y = "% Threatened/Endangered") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# TE species by Nativeness
+ggplot(te_data, aes(x = Nativeness, fill = TECategory)) +
+  geom_bar(position = "fill") +
+  labs(title = "TE Species by Nativeness", y = "Proportion") +
+  scale_y_continuous(labels = scales::percent)
+
+#  TE species by Category
+ggplot(te_data, aes(x = fct_infreq(CategoryName))) +
+  geom_bar(fill = "darkgreen") +
+  labs(title = "TE Species by Category", x = "Category", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Nativeness and Ecological Integrity
+Ecological integrity can be impacted by non-native species, which may disrupt the balance of natural ecosystems. This tab explores the percentage of non-native species in each park, the biological categories most commonly non-native, and their occurrence status. Understanding these patterns helps assess ecological health and informs management priorities.
+
+```{r}
+# Non-native species percent per park
+nativeness_summary <- most_visited_nps_species_data |>
+  group_by(ParkName) |>
+  summarise(
+    Total = n(),
+    NonNative = sum(Nativeness == "Non-native", na.rm = TRUE)
+  ) |>
+  mutate(NonNative_Percent = NonNative / Total * 100)
+
+ggplot(nativeness_summary, aes(x = fct_reorder(ParkName, NonNative_Percent), y = NonNative_Percent)) +
+  geom_col(fill = "tomato") +
+  labs(title = "Percent of Non-Native Species by Park", x = "Park", y = "% Non-Native") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Non-native by category
+non_native_by_cat <- most_visited_nps_species_data |>
+  filter(Nativeness == "Non-native")
+
+ggplot(non_native_by_cat, aes(x = fct_infreq(CategoryName))) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Non-Native Species by Category", x = "Category", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Non-native by Occurrence
+ggplot(non_native_by_cat, aes(x = Occurrence)) +
+  geom_bar(fill = "orange") +
+  labs(title = "Occurrence Status of Non-Native Species", x = "Occurrence", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## Species Richness and Biodiversity Composition
+Biodiversity is a key indicator of ecological resilience. Here the overall species richness in each park which is the count of unique species observed was analyzed. Also, the taxonomic breakdown (e.g., mammals, birds, plants) was exploer  and highlighted how species composition varies across the parks. This helped reveal which parks are hotspots for biological diversity.
+
+```{r}
+# Total species richness per park
+richness <- most_visited_nps_species_data |>
+  group_by(ParkName) |>
+  summarise(Species_Count = n_distinct(SciName))
+
+ggplot(richness, aes(x = fct_reorder(ParkName, Species_Count), y = Species_Count)) +
+  geom_col(fill = "darkorchid") +
+  labs(title = "Species Richness by Park", x = "Park", y = "Unique Species") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Category breakdown by park
+category_dist <- most_visited_nps_species_data |>
+  group_by(ParkName, CategoryName) |>
+  summarise(n = n(), .groups = "drop")
+
+ggplot(category_dist, aes(x = ParkName, y = n, fill = CategoryName)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Species Categories per Park", x = "Park", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Vertebrate vs Plant/Invertebrate
+category_grouped <- most_visited_nps_species_data |>
+  mutate(Group = case_when(
+    CategoryName %in% c("Mammal", "Bird", "Reptile", "Amphibian", "Fish") ~ "Vertebrate",
+    CategoryName == "Plant" ~ "Plant",
+    TRUE ~ "Other"
+  )) |>
+  count(Group)
+
+ggplot(category_grouped, aes(x = Group, y = n, fill = Group)) +
+  geom_col() +
+  labs(title = "Overall Taxonomic Composition", x = "Group", y = "Count")
+
+# Mammal and Bird richness per park
+mammal_bird_rich <- most_visited_nps_species_data |>
+  filter(CategoryName %in% c("Mammal", "Bird")) |>
+  group_by(ParkName, CategoryName) |>
+  summarise(Species_Count = n_distinct(SciName), .groups = "drop")
+
+ggplot(mammal_bird_rich, aes(x = ParkName, y = Species_Count, fill = CategoryName)) +
+  geom_col(position = "dodge") +
+  labs(title = "Mammal and Bird Richness by Park", x = "Park", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Park Area and Species Density
+Do larger parks host more species? This section explores that question by visualizing the relationship between park area and species richness. We also calculate species density (species per km²) and map patterns across the U.S. These visualizations reveal which parks are biodiversity-dense and how park size influences ecological diversity.
+
+
+```{r}
+# Load US map data
+us_map <- map_data("state")
+
+# US map - Species Count and Density
+ggplot() +
+  geom_polygon(data = us_map, aes(x = long, y = lat, group = group), 
+               fill = "gray90", color = "white") +
+  geom_point(data = density_df, aes(x = Longitude, y = Latitude, 
+                                    size = Species_Density, 
+                                    color = Species_Count)) +
+  geom_text(data = density_df, aes(x = Longitude, y = Latitude, label = ParkName),
+            hjust = -0.1, size = 3) +
+  scale_color_gradient(low = "orange", high = "purple") +
+  scale_size(range = c(3, 10)) +
+  labs(
+    title = "Species Richness and Density Across National Parks",
+    x = "Longitude", y = "Latitude",
+    color = "Species Count", size = "Species/km²"
+  ) +
+  theme_minimal()
+
+# US map - Park Area as size, Density as color
+ggplot() +
+  geom_polygon(data = us_map, aes(x = long, y = lat, group = group), 
+               fill = "gray95", color = "white") +
+  geom_point(data = density_df, aes(x = Longitude, y = Latitude, 
+                                    size = ParkArea_km2, 
+                                    color = Species_Density)) +
+  geom_text(data = density_df, aes(x = Longitude, y = Latitude, label = ParkName),
+            hjust = -0.1, size = 3) +
+  scale_color_viridis_c() +
+  scale_size(range = c(3, 10)) +
+  labs(
+    title = "National Park Area and Species Density",
+    x = "Longitude", y = "Latitude",
+    color = "Density (species/km²)", size = "Area (km²)"
+  ) +
+  theme_minimal()
+
+```
+::::
